@@ -31,19 +31,42 @@ const ShoeCard = ({
       ? 'new-release'
       : 'default'
 
+  const label = {
+    'on-sale': 'Sale',
+    'new-release': 'Just Released!',
+  }
+
+  const styles = {
+    'on-sale': {
+      '--background': COLORS.primary,
+      '--padding': '7px 9px 9px 10px',
+      '--font-size': `${14/16}rem`,
+    },
+    'new-release': {
+      '--background': COLORS.secondary,
+      '--padding': '7px 9px 9px 11px',
+      '--font-size': `${14/16}rem`,
+    },
+  }
+
   return (
     <Link href={`/shoe/${slug}`}>
       <Wrapper>
         <ImageWrapper>
           <Image alt="" src={imageSrc} />
+          <Label style={styles[variant]}>{label[variant]}</Label>
         </ImageWrapper>
         <Spacer size={12} />
         <Row>
           <Name>{name}</Name>
-          <Price>{formatPrice(price)}</Price>
+          <Price style={{
+            textDecoration: salePrice ? 'line-through' : 'none',
+            color: salePrice ? COLORS.gray[700] : 'inherit',
+          }}>{formatPrice(price)}</Price>
         </Row>
         <Row>
           <ColorInfo>{pluralize('Color', numOfColors)}</ColorInfo>
+          <SalePrice>{salePrice && formatPrice(salePrice)}</SalePrice>
         </Row>
       </Wrapper>
     </Link>
@@ -53,6 +76,7 @@ const ShoeCard = ({
 const Link = styled.a`
   text-decoration: none;
   color: inherit;
+  flex: 1 1 370px;
 `;
 
 const Wrapper = styled.article``;
@@ -61,10 +85,29 @@ const ImageWrapper = styled.div`
   position: relative;
 `;
 
-const Image = styled.img``;
+const Image = styled.img`
+  width: 100%;
+  border-radius: 16px 16px 4px 4px;
+`;
+
+const Label = styled.div`
+  position: absolute;
+  top: 12px;
+  right: -4px;
+  padding: var(--padding);
+  background: var(--background);
+  border-radius: 2px;
+
+  color: ${COLORS.white};
+  font-weight: 700;
+  font-size: var(--font-size);
+`;
 
 const Row = styled.div`
   font-size: 1rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 `;
 
 const Name = styled.h3`
